@@ -1,6 +1,8 @@
 package com.example.timetableapp.util
 
+import android.util.Log
 import com.example.timetableapp.data.Period
+import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.InputStream
 
@@ -25,6 +27,8 @@ class ExcelImporter {
                     }
                 }
 
+                Log.d("ExcelImporter", "Found headers: $headerMap")
+
                 // Get indices for each column
                 val subjectIdx = headerMap["Subject"] ?: -1
                 val startTimeIdx = headerMap["StartTime"] ?: -1
@@ -35,6 +39,7 @@ class ExcelImporter {
 
                 // Check if required columns exist
                 if (subjectIdx == -1 || startTimeIdx == -1 || endTimeIdx == -1) {
+                    Log.e("ExcelImporter", "Required columns missing. Found: Subject=$subjectIdx, StartTime=$startTimeIdx, EndTime=$endTimeIdx")
                     return periods // Return empty list if required columns are missing
                 }
 
@@ -50,8 +55,8 @@ class ExcelImporter {
                         val dayOfWeek = if (dayOfWeekIdx >= 0) {
                             val cell = row.getCell(dayOfWeekIdx)
                             when (cell?.cellType) {
-                                org.apache.poi.ss.usermodel.CellType.NUMERIC -> cell.numericCellValue.toInt()
-                                org.apache.poi.ss.usermodel.CellType.STRING -> cell.stringCellValue.toIntOrNull() ?: 1
+                                CellType.NUMERIC -> cell.numericCellValue.toInt()
+                                CellType.STRING -> cell.stringCellValue.toIntOrNull() ?: 1
                                 else -> 1
                             }
                         } else 1
@@ -70,13 +75,16 @@ class ExcelImporter {
                             )
                         }
                     } catch (e: Exception) {
+                        Log.e("ExcelImporter", "Error processing row $i: ${e.message}")
                         // Skip malformed rows
                         continue
                     }
                 }
 
+                Log.d("ExcelImporter", "Imported ${periods.size} periods from Excel")
                 workbook.close()
             } catch (e: Exception) {
+                Log.e("ExcelImporter", "Error importing Excel file: ${e.message}")
                 e.printStackTrace()
             }
 

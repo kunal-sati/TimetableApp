@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -88,7 +89,10 @@ class MainActivity : AppCompatActivity() {
 
         // Setup ViewModel
         periodViewModel = ViewModelProvider(this)[PeriodViewModel::class.java]
+
+        // Observe LiveData - FIXED: Now properly updates the adapter with new data
         periodViewModel.allPeriods.observe(this) { periods ->
+            Log.d("MainActivity", "Observed periods: ${periods.size}")
             periodAdapter.submitList(periods)
             updateCurrentTimeAndPeriods()
         }
@@ -144,6 +148,8 @@ class MainActivity : AppCompatActivity() {
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // Adjust to 1-7 (Monday-Sunday)
 
         val periods = periodViewModel.allPeriods.value ?: listOf()
+        Log.d("MainActivity", "Current periods count: ${periods.size}")
+
         val todayPeriods = periods.filter { it.dayOfWeek == dayOfWeek }
 
         var currentPeriod: Period? = null
@@ -207,6 +213,7 @@ class MainActivity : AppCompatActivity() {
                         dayOfWeek = dayOfWeek,
                         notes = notes
                     )
+                    Log.d("MainActivity", "Adding new period: $period")
                     periodViewModel.insert(period)
                     Toast.makeText(this, "Period added", Toast.LENGTH_SHORT).show()
                 } else {
@@ -264,6 +271,7 @@ class MainActivity : AppCompatActivity() {
                         dayOfWeek = dayOfWeek,
                         notes = notes
                     )
+                    Log.d("MainActivity", "Updating period: $updatedPeriod")
                     periodViewModel.update(updatedPeriod)
                     Toast.makeText(this, "Period updated", Toast.LENGTH_SHORT).show()
                 } else {
@@ -284,6 +292,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Delete Period")
             .setMessage("Are you sure you want to delete ${period.subject}?")
             .setPositiveButton("Delete") { _, _ ->
+                Log.d("MainActivity", "Deleting period: $period")
                 periodViewModel.delete(period)
                 Toast.makeText(this, "Period deleted", Toast.LENGTH_SHORT).show()
             }

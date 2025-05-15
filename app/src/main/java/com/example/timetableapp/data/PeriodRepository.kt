@@ -24,6 +24,7 @@ class PeriodRepository(private val periodDao: PeriodDao) {
         }
     }
 
+    // Replace your existing delete method with this one
     suspend fun delete(period: Period) {
         withContext(Dispatchers.IO) {
             periodDao.delete(period)
