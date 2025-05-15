@@ -2,8 +2,7 @@ package com.example.timetableapp.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PeriodDao {
@@ -14,20 +13,17 @@ interface PeriodDao {
     fun getPeriodsByDay(dayOfWeek: Int): LiveData<List<Period>>
 
     @Insert
-    suspend fun insert(period: Period): Long
+    fun insert(period: Period): Long
 
     @Update
-    suspend fun update(period: Period)
+    fun update(period: Period)
 
     @Delete
-    suspend fun delete(period: Period)
+    fun delete(period: Period)
 
     @Query("DELETE FROM periods")
-    suspend fun deleteAll()
+    fun deleteAll()
 
-    // Add this non-LiveData method for widget
     @Query("SELECT * FROM periods ORDER BY dayOfWeek, startTime")
-    suspend fun getAllPeriodsSync(): List<Period>
-
-
+    fun getAllPeriodsSync(): Flow<List<Period>>
 }

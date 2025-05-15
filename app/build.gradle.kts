@@ -56,7 +56,7 @@ dependencies {
     // Room components
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
-    annotationProcessor ("androidx.room:room-compiler:2.5.2")
+    kapt ("androidx.room:room-compiler:2.5.2")
 
 
     // CSV parsing

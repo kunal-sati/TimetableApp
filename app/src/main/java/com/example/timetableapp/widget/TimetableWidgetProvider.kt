@@ -13,6 +13,7 @@ import com.example.timetableapp.data.Period
 import com.example.timetableapp.data.TimetableDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -63,9 +64,8 @@ class TimetableWidgetProvider : AppWidgetProvider() {
                     val db = TimetableDatabase.getDatabase(context)
                     val periodDao = db.periodDao()
 
-                    // Get all periods and filter manually
-                    // This is a workaround since we can't directly access LiveData value in a background thread
-                    val allPeriods = db.periodDao().getAllPeriodsSync()
+                    // Get all periods and filter for current day
+                    val allPeriods = periodDao.getAllPeriodsSync().first()
                     val periods = allPeriods.filter { it.dayOfWeek == dayOfWeek }
 
                     var currentPeriod: Period? = null
