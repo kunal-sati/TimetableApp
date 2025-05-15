@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/widget_background">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timetable"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/widget_current_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current: None"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/widget_next_period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next: None"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp" />
+</LinearLayout>
